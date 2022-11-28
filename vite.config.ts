@@ -13,6 +13,6 @@ export default defineConfig({
   },
   base: '/pahanov-birthday/',
   build: {
-    outDir: '../docs'
+    outDir: './docs'
   }
 })
