@@ -1,1 +1,0 @@
-import{_ as e,o as s,c as t,a as _}from"./index.c3a2db01.js";const o={},a={class:"about"},n=_("h1",null,"This is an about page",-1),c=[n];function i(r,d){return s(),t("div",a,c)}const h=e(o,[["render",i]]);export{h as default};
