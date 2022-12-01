@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { toRefs } from "vue";
-
 const props = defineProps<{
   total: number,
   achieved: number
 }>()
-
 const { total, achieved } = toRefs(props);
-
-console.log('total', total)
 </script>
 
 <template>
@@ -31,6 +27,7 @@ console.log('total', total)
 .item {
   margin-top: 2rem;
   display: flex;
+  cursor: pointer;
 }
 
 .details {
