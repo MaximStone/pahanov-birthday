@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import PuzzleBoard from "@/components/PuzzleBoard.vue";
 import { computed, ref } from "vue";
-import {AchieveModel, useAchievements} from "@/logic/opened";
+import { AchieveModel, useAchievements } from "@/logic/opened";
 
 const { puzzleOpenedAchieves, puzzleAchieves } = useAchievements();
 
