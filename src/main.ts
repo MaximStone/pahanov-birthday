@@ -4,6 +4,8 @@ import router from './router'
 
 import './assets/main.css'
 
+import { useStorage } from '@vueuse/core'
+
 const app = createApp(App)
 
 app.use(router)
