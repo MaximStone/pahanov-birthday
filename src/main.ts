@@ -1,13 +1,24 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
 
-import './assets/main.css'
+import "./assets/main.css";
+import { state, useAchievements, achieveMap } from "@/logic/opened";
 
-import { useStorage } from '@vueuse/core'
+const app = createApp(App);
 
-const app = createApp(App)
+app.use(router);
 
-app.use(router)
+const { memoryOpenedAchieves, puzzleOpenedAchieves } = useAchievements();
 
-app.mount('#app')
+state.value.puzzle.forEach((achieveName: string) => {
+  const achieveObject = achieveMap.get(achieveName);
+  if (achieveObject) puzzleOpenedAchieves.value.push(achieveObject);
+});
+
+state.value.memories.forEach((achieveName: string) => {
+  const achieveObject = achieveMap.get(achieveName);
+  if (achieveObject) memoryOpenedAchieves.value.push(achieveObject);
+});
+
+app.mount("#app");

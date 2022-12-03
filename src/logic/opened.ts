@@ -21,7 +21,6 @@ import fachieve05 from "@/achieves/full/05.jpg";
 import achieve06 from "@/achieves/06.jpg";
 import fachieve06 from "@/achieves/full/06.jpg";
 
-
 import achieve1 from "@/achieves/1.jpg";
 import fachieve1 from "@/achieves/full/1.jpg";
 
@@ -82,7 +81,6 @@ import fachieve211 from "@/achieves/full/211.jpg";
 import achieve212 from "@/achieves/212.jpg";
 import fachieve212 from "@/achieves/full/212.jpg";
 
-
 import achieve3 from "@/achieves/3.jpg";
 import fachieve3 from "@/achieves/full/3.jpg";
 
@@ -113,7 +111,6 @@ import fachieve38 from "@/achieves/full/38.jpg";
 import achieve39 from "@/achieves/39.jpg";
 import fachieve39 from "@/achieves/full/39.jpg";
 
-
 import achieve345 from "@/achieves/345.jpg";
 import fachieve345 from "@/achieves/full/345.jpg";
 
@@ -131,151 +128,97 @@ import fachieve34234 from "@/achieves/full/34234.jpg";
 
 import achieve987624 from "@/achieves/987624.jpg";
 import fachieve987624 from "@/achieves/full/987624.jpg";
+import { useStorage } from "@vueuse/core";
 
-const achieveMap = new Map<string, { small: string, big: string }>(
+export const state = useStorage(
+  "pahanov-bd",
+  { memories: [], puzzle: [] },
+  localStorage,
+  { mergeDefaults: true }
+);
+
+export type AchieveModel = { name: string; small: string; big: string };
+
+export const achieveMap = new Map<string, AchieveModel>([
+  ["achieve0", { name: "achieve0", small: achieve0, big: fachieve0 }],
+  ["achieve01", { name: "achieve01", small: achieve01, big: fachieve01 }],
+  ["achieve02", { name: "achieve02", small: achieve02, big: fachieve02 }],
+  ["achieve03", { name: "achieve03", small: achieve03, big: fachieve03 }],
+  ["achieve04", { name: "achieve04", small: achieve04, big: fachieve04 }],
+  ["achieve05", { name: "achieve05", small: achieve05, big: fachieve05 }],
+  ["achieve06", { name: "achieve06", small: achieve06, big: fachieve06 }],
+  ["achieve1", { name: "achieve1", small: achieve1, big: fachieve1 }],
+  ["achieve11", { name: "achieve11", small: achieve11, big: fachieve11 }],
+  ["achieve12", { name: "achieve12", small: achieve12, big: fachieve12 }],
+  ["achieve13", { name: "achieve13", small: achieve13, big: fachieve13 }],
+  ["achieve14", { name: "achieve14", small: achieve14, big: fachieve14 }],
+  ["achieve15", { name: "achieve15", small: achieve15, big: fachieve15 }],
+  ["achieve16", { name: "achieve16", small: achieve16, big: fachieve16 }],
+  ["achieve2", { name: "achieve2", small: achieve2, big: fachieve2 }],
+  ["achieve21", { name: "achieve21", small: achieve21, big: fachieve21 }],
+  ["achieve22", { name: "achieve22", small: achieve22, big: fachieve22 }],
+  ["achieve23", { name: "achieve23", small: achieve23, big: fachieve23 }],
+  ["achieve24", { name: "achieve24", small: achieve24, big: fachieve24 }],
+  ["achieve25", { name: "achieve25", small: achieve25, big: fachieve25 }],
+  ["achieve26", { name: "achieve26", small: achieve26, big: fachieve26 }],
+  ["achieve27", { name: "achieve27", small: achieve27, big: fachieve27 }],
+  ["achieve28", { name: "achieve28", small: achieve28, big: fachieve28 }],
+  ["achieve29", { name: "achieve29", small: achieve29, big: fachieve29 }],
+  ["achieve210", { name: "achieve210", small: achieve210, big: fachieve210 }],
+  ["achieve211", { name: "achieve211", small: achieve211, big: fachieve211 }],
+  ["achieve212", { name: "achieve212", small: achieve212, big: fachieve212 }],
+  ["achieve3", { name: "achieve3", small: achieve3, big: fachieve3 }],
+  ["achieve31", { name: "achieve31", small: achieve31, big: fachieve31 }],
+  ["achieve32", { name: "achieve32", small: achieve32, big: fachieve32 }],
+  ["achieve33", { name: "achieve33", small: achieve33, big: fachieve33 }],
+  ["achieve34", { name: "achieve34", small: achieve34, big: fachieve34 }],
+  ["achieve35", { name: "achieve35", small: achieve35, big: fachieve35 }],
+  ["achieve36", { name: "achieve36", small: achieve36, big: fachieve36 }],
+  ["achieve37", { name: "achieve37", small: achieve37, big: fachieve37 }],
+  ["achieve38", { name: "achieve38", small: achieve38, big: fachieve38 }],
+  ["achieve39", { name: "achieve39", small: achieve39, big: fachieve39 }],
+  ["achieve345", { name: "achieve345", small: achieve345, big: fachieve345 }],
+  ["achieve456", { name: "achieve456", small: achieve456, big: fachieve456 }],
+  ["achieve654", { name: "achieve654", small: achieve654, big: fachieve654 }],
   [
-    achieve0
-    fachieve0
-    achieve01
-    fachieve01
-    achieve02
-    fachieve02
-    achieve03
-    fachieve03
-    achieve04
-    fachieve04
-    achieve05
-    fachieve05
-    achieve06
-    fachieve06
-    achieve1 f
-    fachieve1
-    achieve11
-    fachieve11
-    achieve12
-    fachieve12
-    achieve13
-    fachieve13
-    achieve14
-    fachieve14
-    achieve15
-    fachieve15
-    achieve16
-    fachieve16
-    achieve2 f
-    fachieve2
-    achieve21
-    fachieve21
-    achieve22
-    fachieve22
-    achieve23
-    fachieve23
-    achieve24
-    fachieve24
-    achieve25
-    fachieve25
-    achieve26
-    fachieve26
-    achieve27
-    fachieve27
-    achieve28
-    fachieve28
-    achieve29
-    fachieve29
-    achieve210
-    fachieve21
-    achieve211
-    fachieve21
-    achieve212
-    fachieve21
-    achieve3 f
-    fachieve3
-    achieve31
-    fachieve31
-    achieve32
-    fachieve32
-    achieve33
-    fachieve33
-    achieve34
-    fachieve34
-    achieve35
-    fachieve35
-    achieve36
-    fachieve36
-    achieve37
-    fachieve37
-    achieve38
-    fachieve38
-    achieve39
-    fachieve39
-  ]
-)
+    "achieve6454",
+    { name: "achieve6454", small: achieve6454, big: fachieve6454 },
+  ],
+  [
+    "achieve34234",
+    { name: "achieve34234", small: achieve34234, big: fachieve34234 },
+  ],
+  [
+    "achieve987624",
+    { name: "achieve987624", small: achieve987624, big: fachieve987624 },
+  ],
+]);
 
 export const useAchievements = () => {
-  const allAchieves = ref([
-    achieve0,
-    achieve01,
-    achieve02,
-    achieve03,
-    achieve04,
-    achieve05,
-
-    achieve1,
-    achieve11,
-    achieve12,
-    achieve13,
-    achieve14,
-    achieve15,
-    achieve16,
-
-    achieve2,
-    achieve21,
-    achieve22,
-    achieve23,
-    achieve24,
-    achieve25,
-    achieve26,
-    achieve27,
-    achieve28,
-    achieve29,
-    achieve210,
-    achieve211,
-    achieve212,
-
-    achieve3,
-    achieve31,
-    achieve32,
-    achieve33,
-    achieve34,
-    achieve35,
-    achieve36,
-    achieve37,
-  ]);
-  const totalAchievements = computed(() => allAchieves.value.length);
+  const totalAchievements = computed(() => achieveMap.size);
 
   const memoriesMinimum = 10;
 
   const memoryAchieves = computed(() =>
-    allAchieves.value.slice(
+    Array.from(achieveMap.values()).slice(
       0,
-      Math.max(memoriesMinimum, Math.round((allAchieves.value.length - 1) / 2))
+      Math.max(memoriesMinimum, Math.round((achieveMap.size - 1) / 2))
     )
   );
-  const memoryOpenedAchieves = ref<string[]>([]);
+  const memoryOpenedAchieves = ref<AchieveModel[]>([]);
   const puzzleAchieves = computed(() =>
-    allAchieves.value.slice(
+    Array.from(achieveMap.values()).slice(
       memoryAchieves.value.length,
-      allAchieves.value.length - 1
+      achieveMap.size - 1
     )
   );
-  const puzzleOpenedAchieves = ref<string[]>([]);
+  const puzzleOpenedAchieves = ref<AchieveModel[]>([]);
 
-  const openedAchieves = computed<string[]>(() =>
+  const openedAchieves = computed<AchieveModel[]>(() =>
     memoryOpenedAchieves.value.concat(puzzleOpenedAchieves.value)
   );
 
   return {
-    allAchieves,
     openedAchieves,
     totalAchievements,
     memoryAchieves,
@@ -284,4 +227,3 @@ export const useAchievements = () => {
     puzzleOpenedAchieves,
   };
 };
-

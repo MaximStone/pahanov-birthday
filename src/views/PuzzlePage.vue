@@ -3,8 +3,8 @@
     <puzzle-board
       :autoResize="true"
       :showNumber="showNumber"
-      :cols="3"
-      :rows="3"
+      :cols="2"
+      :rows="2"
       :src="firstNotOpenedAchievement"
       :animation="animation"
       :width="width"
@@ -26,7 +26,7 @@
     margin: 0;
     padding: 0;
     z-index: 1;
-    background-color: #DDD;
+    background-color: #ddd;
     min-width: 512px;
     min-height: 512px;
   }
@@ -35,27 +35,29 @@
 <script setup lang="ts">
 import PuzzleBoard from "@/components/PuzzleBoard.vue";
 import { computed, ref } from "vue";
-import { useAchievements } from "@/logic/opened";
+import {AchieveModel, useAchievements} from "@/logic/opened";
 
-const { puzzleOpenedAchieves, puzzleAchieves } = useAchievements()
+const { puzzleOpenedAchieves, puzzleAchieves } = useAchievements();
 
 const notOpenedAchievements = computed(() => {
-  return puzzleAchieves.value.filter((item: string) => !puzzleOpenedAchieves.value.includes(item))
-})
+  return puzzleAchieves.value.filter(
+    (item: AchieveModel) => !puzzleOpenedAchieves.value.includes(item)
+  );
+});
 
-const firstNotOpenedAchievement = computed(() => notOpenedAchievements.value[0])
+const firstNotOpenedAchievement = computed(
+  () => notOpenedAchievements.value[0]
+);
 
-console.log('firstNotOpenedAchievement', firstNotOpenedAchievement.value)
+const width = ref(512);
+const height = ref(512);
+const animation = true;
+const showNumber = ref<boolean>(false);
 
-const width = ref(512)
-const height = ref(512)
-const animation = true
-const showNumber = ref<boolean>(false)
-
-const onPuzzleBoardInit = () => {}
-const onPuzzleBoardStart = () => {}
-const onPuzzleBoardChange = () => {}
+const onPuzzleBoardInit = () => {};
+const onPuzzleBoardStart = () => {};
+const onPuzzleBoardChange = () => {};
 const onPuzzleBoardFinish = () => {
-  console.log('finish!')
-}
+  console.log("finish!");
+};
 </script>
