@@ -129,15 +129,14 @@ import fachieve34234 from "@/achieves/full/34234.jpg";
 import achieve987624 from "@/achieves/987624.jpg";
 import fachieve987624 from "@/achieves/full/987624.jpg";
 import { useStorage } from "@vueuse/core";
+import type { AchieveModel } from "@/logic/types";
 
 export const state = useStorage(
   "pahanov-bd",
-  { memories: [], puzzle: [] },
+  { memories: [] as string[], puzzle: [] as string[] },
   localStorage,
   { mergeDefaults: true }
 );
-
-export type AchieveModel = { name: string; small: string; big: string };
 
 export const achieveMap = new Map<string, AchieveModel>([
   ["achieve0", { name: "achieve0", small: achieve0, big: fachieve0 }],
@@ -167,13 +166,11 @@ export const achieveMap = new Map<string, AchieveModel>([
   ["achieve210", { name: "achieve210", small: achieve210, big: fachieve210 }],
   ["achieve211", { name: "achieve211", small: achieve211, big: fachieve211 }],
   ["achieve212", { name: "achieve212", small: achieve212, big: fachieve212 }],
-  ["achieve3", { name: "achieve3", small: achieve3, big: fachieve3 }],
   ["achieve31", { name: "achieve31", small: achieve31, big: fachieve31 }],
   ["achieve32", { name: "achieve32", small: achieve32, big: fachieve32 }],
   ["achieve33", { name: "achieve33", small: achieve33, big: fachieve33 }],
   ["achieve34", { name: "achieve34", small: achieve34, big: fachieve34 }],
   ["achieve35", { name: "achieve35", small: achieve35, big: fachieve35 }],
-  ["achieve36", { name: "achieve36", small: achieve36, big: fachieve36 }],
   ["achieve37", { name: "achieve37", small: achieve37, big: fachieve37 }],
   ["achieve38", { name: "achieve38", small: achieve38, big: fachieve38 }],
   ["achieve39", { name: "achieve39", small: achieve39, big: fachieve39 }],
@@ -194,10 +191,13 @@ export const achieveMap = new Map<string, AchieveModel>([
   ],
 ]);
 
+const memoryOpenedAchieves = ref<AchieveModel[]>([]);
+const puzzleOpenedAchieves = ref<AchieveModel[]>([]);
+
 export const useAchievements = () => {
   const totalAchievements = computed(() => achieveMap.size);
 
-  const memoriesMinimum = 10;
+  const memoriesMinimum = 30;
 
   const memoryAchieves = computed(() =>
     Array.from(achieveMap.values()).slice(
@@ -205,14 +205,13 @@ export const useAchievements = () => {
       Math.max(memoriesMinimum, Math.round((achieveMap.size - 1) / 2))
     )
   );
-  const memoryOpenedAchieves = ref<AchieveModel[]>([]);
+
   const puzzleAchieves = computed(() =>
     Array.from(achieveMap.values()).slice(
-      memoryAchieves.value.length,
+      memoryAchieves.value.length - 1,
       achieveMap.size - 1
     )
   );
-  const puzzleOpenedAchieves = ref<AchieveModel[]>([]);
 
   const openedAchieves = computed<AchieveModel[]>(() =>
     memoryOpenedAchieves.value.concat(puzzleOpenedAchieves.value)

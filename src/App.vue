@@ -1,25 +1,44 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView } from "vue-router";
+import HelloWorld from "./components/HelloWorld.vue";
 import { useAchievements } from "@/logic/opened";
-const { totalAchievements, openedAchieves } = useAchievements()
+
+const { totalAchievements, openedAchieves } = useAchievements();
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <div class="app-container">
+    <header>
+      <img
+        alt="Vue logo"
+        class="logo"
+        src="@/assets/logo.svg"
+        width="125"
+        height="125"
+      />
 
-    <div class="wrapper">
-      <HelloWorld msg="С днём рождения, Максон!" />
+      <div class="wrapper">
+        <HelloWorld msg="С днём рождения, Максон!" />
 
-      <RouterLink v-if="totalAchievements === openedAchieves.length" to="/congrats">К подаркам</RouterLink>
-    </div>
-  </header>
+        <RouterLink
+          v-if="totalAchievements === openedAchieves.length"
+          to="/congrats"
+          >К подаркам</RouterLink
+        >
+      </div>
+    </header>
 
-  <RouterView />
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
+.app-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0 2rem;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;

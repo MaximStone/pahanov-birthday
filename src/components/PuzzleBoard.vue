@@ -18,6 +18,7 @@
       :height="internalHeight"
     ></canvas>
     <canvas
+      id="main-canvas"
       ref="puzzle-canvas"
       class="puzzle-canvas"
       @click.prevent
@@ -329,10 +330,10 @@ export default {
       if (this.isImage) {
         this.isTouchNeeded = false;
         // add onLoadImage hook after the img element appears
+        this.initBoard();
         this._loadImageToCanvas();
         this.$nextTick(() => {
           this.$refs.sourceImg.addEventListener("load", () => {
-            console.log('image loaded');
             this._loadImageToCanvas();
           });
         });
@@ -344,6 +345,7 @@ export default {
       this.board = createRandomBoard2D(this.cols, this.rows);
       this._blockPositions = [];
       this._isStarted = false;
+      this.isGoal = false
       this.$emit("init");
     },
     updateBlockPositions(isImmediate) {
@@ -388,21 +390,17 @@ export default {
       const vw = sourceImg.width;
       const vh = sourceImg.height;
       const ratio = Math.max(w / vw, h / vh);
-      console.log('ratio', ratio)
 
       // NOTE: iOS11 has a memory leak on canvas.drawImage with 9 args
       // if the image is scaled.
       // to prevent them I have to use 5 args version for scaling
       this._tmpCanvas.width = vw * ratio;
       this._tmpCanvas.height = vh * ratio;
-      console.log('tmpCtx', sourceImg, 0, 0, vw * ratio, vh * ratio)
       this._tmpCtx.drawImage(sourceImg, 0, 0, vw * ratio, vh * ratio);
 
       // copies clipped video source to canvas for sync drawing
       const marginX = (vw * ratio - w) / 2 || 0;
       const marginY = (vh * ratio - h) / 2 || 0;
-      console.log('_loadImageToCanvas -> ctx.drawImage', { marginX, marginY, w, h })
-      console.log(this._tmpCanvas, marginX, marginY, w, h, w, 0, w, h)
       ctx.drawImage(this._tmpCanvas, marginX, marginY, w, h, w, 0, w, h);
     },
     _loadVideoFrameToCanvas() {
@@ -425,7 +423,6 @@ export default {
       // copies clipped video source to canvas for sync drawing
       const marginX = (vw * ratio - w) / 2;
       const marginY = (vh * ratio - h) / 2;
-      console.log('_loadVideoFrameToCanvas -> ctx.drawImage', { marginX, marginY, w, h })
       ctx.drawImage(this._tmpCanvas, marginX, marginY, w, h, w, 0, w, h);
     },
     slide(idx) {

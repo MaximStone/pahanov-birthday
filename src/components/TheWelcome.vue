@@ -4,7 +4,7 @@ import IconMemory from "@/components/icons/IconMemory.vue";
 import IconPuzzle from "@/components/icons/IconPuzzle.vue";
 import { useAchievements } from "@/logic/opened";
 import router from "@/router";
-const { memoryAchieves, puzzleAchieves, memoryOpenedAchieves, puzzleOpenedAchieves } = useAchievements()
+const { memoryAchieves, puzzleAchieves, memoryOpenedAchieves, puzzleOpenedAchieves, totalAchievements, openedAchieves } = useAchievements()
 
 const memoriesClickHandler = () => {
 
@@ -21,17 +21,26 @@ const puzzleClickHandler = () => {
     <template #icon>
       <IconMemory />
     </template>
-    <template #heading>Memories game</template>
+    <template #heading>Меморис</template>
 
-    Open all cards using identical pairs
+    Открой награду найдя все одинаковые пары
   </WelcomeItem>
 
   <WelcomeItem :total="puzzleAchieves.length" :achieved="puzzleOpenedAchieves.length" @click="puzzleClickHandler">
     <template #icon>
       <IconPuzzle />
     </template>
-    <template #heading>Puzzle game</template>
+    <template #heading>Пазл</template>
 
-    Solve the puzzle to open the achievement
+    Собери слайдер пазл
+  </WelcomeItem>
+
+  <WelcomeItem :total="totalAchievements" :achieved="openedAchieves.length" @click="puzzleClickHandler">
+    <template #icon>
+      <IconPuzzle />
+    </template>
+    <template #heading>Галерея наград</template>
+
+    Скачай любую открытую награду
   </WelcomeItem>
 </template>

@@ -1,11 +1,19 @@
 <template>
   <div class="puzzle-container">
-    <puzzle-board
+    <Particles
+      v-if="showParticles"
+      id="tsparticles"
+      :particlesInit="particlesInit"
+      :particlesLoaded="particlesLoaded"
+      url="src/assets/config.json"
+    />
+    <PuzzleBoard
+      :id="`board_${firstNotOpenedAchievement.name}`"
       :autoResize="true"
       :showNumber="showNumber"
-      :cols="2"
-      :rows="2"
-      :src="firstNotOpenedAchievement"
+      :cols="3"
+      :rows="3"
+      :src="firstNotOpenedAchievement.small"
       :animation="animation"
       :width="width"
       :height="height"
@@ -14,6 +22,23 @@
       @change="onPuzzleBoardChange"
       @finish="onPuzzleBoardFinish"
     />
+    <div v-show="showButtons">
+      <NConfigProvider
+        :theme="theme"
+        style="
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
+        "
+      >
+        <NButton>Скачать изображение</NButton>
+        <NButton>Перейти к наградам</NButton>
+        <NButton v-if="showNextButton" @click="nextLevelClickHandler"
+          >Следующий уровень</NButton
+        >
+      </NConfigProvider>
+    </div>
   </div>
 </template>
 
@@ -35,13 +60,22 @@
 <script setup lang="ts">
 import PuzzleBoard from "@/components/PuzzleBoard.vue";
 import { computed, ref } from "vue";
-import { AchieveModel, useAchievements } from "@/logic/opened";
+import { state, useAchievements } from "@/logic/opened";
+import type { AchieveModel } from "@/logic/types";
+import { loadFull } from "tsparticles";
+import type { Container, Engine } from "tsparticles-engine";
+import { NConfigProvider, NButton, useOsTheme, darkTheme } from "naive-ui";
 
 const { puzzleOpenedAchieves, puzzleAchieves } = useAchievements();
 
 const notOpenedAchievements = computed(() => {
   return puzzleAchieves.value.filter(
-    (item: AchieveModel) => !puzzleOpenedAchieves.value.includes(item)
+    (item: AchieveModel) => {
+      return !puzzleOpenedAchieves.value
+        .map((item: AchieveModel) => item.name)
+        .includes(item.name)
+    }
+
   );
 });
 
@@ -49,15 +83,50 @@ const firstNotOpenedAchievement = computed(
   () => notOpenedAchievements.value[0]
 );
 
+const currentAchievement = ref<AchieveModel | undefined>();
+const showButtons = ref<boolean>(false);
+const showNextButton = ref<boolean>(false);
+const showParticles = ref<boolean>(false);
+
 const width = ref(512);
 const height = ref(512);
 const animation = true;
 const showNumber = ref<boolean>(false);
 
-const onPuzzleBoardInit = () => {};
+const engineRef = ref<Engine | undefined>();
+const particlesContainerRef = ref<Container | undefined>();
+
+const particlesInit = async (engine: Engine) => {
+  engineRef.value = engine;
+  if (engineRef.value) {
+    await loadFull(engineRef.value);
+  }
+};
+
+const particlesLoaded = async (container: Container) => {
+  particlesContainerRef.value = container;
+};
+
+const onPuzzleBoardInit = () => {
+  currentAchievement.value = firstNotOpenedAchievement.value;
+};
 const onPuzzleBoardStart = () => {};
 const onPuzzleBoardChange = () => {};
-const onPuzzleBoardFinish = () => {
-  console.log("finish!");
+
+const onPuzzleBoardFinish = async () => {
+  showNextButton.value =
+    puzzleOpenedAchieves.value.length !== puzzleAchieves.value.length;
+  showButtons.value = true;
+  showParticles.value = true;
+  state.value.puzzle.push(firstNotOpenedAchievement.value.name);
 };
+
+const nextLevelClickHandler = () => {
+  showParticles.value = false;
+  showButtons.value = false;
+  puzzleOpenedAchieves.value.push(firstNotOpenedAchievement.value);
+};
+
+const osThemeRef = useOsTheme();
+const theme = computed(() => (osThemeRef.value === "dark" ? darkTheme : null));
 </script>
