@@ -217,8 +217,18 @@ export const useAchievements = () => {
     memoryOpenedAchieves.value.concat(puzzleOpenedAchieves.value)
   );
 
+  const downloadTheBigPicture = (achievement: AchieveModel) => {
+    const link = document.createElement("a");
+    link.href = achievement?.big || "";
+    link.download = `${achievement?.name}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return {
     openedAchieves,
+    downloadTheBigPicture,
     totalAchievements,
     memoryAchieves,
     memoryOpenedAchieves,
