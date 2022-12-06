@@ -81,9 +81,6 @@ import fachieve211 from "@/achieves/full/211.jpg";
 import achieve212 from "@/achieves/212.jpg";
 import fachieve212 from "@/achieves/full/212.jpg";
 
-import achieve3 from "@/achieves/3.jpg";
-import fachieve3 from "@/achieves/full/3.jpg";
-
 import achieve31 from "@/achieves/31.jpg";
 import fachieve31 from "@/achieves/full/31.jpg";
 
@@ -98,9 +95,6 @@ import fachieve34 from "@/achieves/full/34.jpg";
 
 import achieve35 from "@/achieves/35.jpg";
 import fachieve35 from "@/achieves/full/35.jpg";
-
-import achieve36 from "@/achieves/36.jpg";
-import fachieve36 from "@/achieves/full/36.jpg";
 
 import achieve37 from "@/achieves/37.jpg";
 import fachieve37 from "@/achieves/full/37.jpg";
