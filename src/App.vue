@@ -3,7 +3,7 @@ import { RouterLink, RouterView } from "vue-router";
 import HelloWorld from "./components/HelloWorld.vue";
 import { useAchievements } from "@/logic/opened";
 
-const { totalAchievements, openedAchieves } = useAchievements();
+const { openedAchieves } = useAchievements();
 </script>
 
 <template>
@@ -12,19 +12,25 @@ const { totalAchievements, openedAchieves } = useAchievements();
       <img
         alt="Vue logo"
         class="logo"
-        src="@/assets/logo.svg"
-        width="125"
-        height="125"
+        src="@/assets/birthday.png"
+        style="max-width: 250px"
       />
 
       <div class="wrapper">
         <HelloWorld msg="С днём рождения, Максон!" />
 
-        <RouterLink
-          v-if="totalAchievements === openedAchieves.length"
-          to="/congrats"
-          >К подаркам</RouterLink
-        >
+        <nav>
+          <RouterLink
+            v-if="openedAchieves.length > 0"
+            to="/"
+          >Главная</RouterLink
+          >
+          <RouterLink
+            v-if="openedAchieves.length > 0"
+            to="/congrats"
+          >Награды</RouterLink
+          >
+        </nav>
       </div>
     </header>
 

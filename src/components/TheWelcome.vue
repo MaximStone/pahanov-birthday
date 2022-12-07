@@ -13,13 +13,17 @@ const memoriesClickHandler = () => {
 const puzzleClickHandler = () => {
   router.push({ name: 'puzzle' })
 }
+
+const finishPageClickHandler = () => {
+  router.push({ name: 'finish' })
+}
 </script>
 
 <template>
 
   <WelcomeItem :total="memoryAchieves.length" :achieved="memoryOpenedAchieves.length" @click="memoriesClickHandler">
     <template #icon>
-      <IconMemory />
+      <span style="font-size: 25px; font-weight: bold">M</span>
     </template>
     <template #heading>Меморис</template>
 
@@ -35,9 +39,9 @@ const puzzleClickHandler = () => {
     Собери слайдер пазл
   </WelcomeItem>
 
-  <WelcomeItem :total="totalAchievements" :achieved="openedAchieves.length" @click="puzzleClickHandler">
+  <WelcomeItem :total="totalAchievements" :achieved="openedAchieves.length" @click="finishPageClickHandler">
     <template #icon>
-      <IconPuzzle />
+      <IconMemory />
     </template>
     <template #heading>Галерея наград</template>
 
