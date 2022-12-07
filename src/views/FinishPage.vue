@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Открытые награды</h1>
+    <h1 style="margin-bottom: 30px">Открытые награды</h1>
     <div class="achieves-container">
       <div v-for="(item, idx) in achievesDisplayArray" class="achieve-box">
         <template v-if="item.opened">

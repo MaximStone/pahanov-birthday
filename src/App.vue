@@ -21,7 +21,6 @@ const { openedAchieves } = useAchievements();
 
         <nav>
           <RouterLink
-            v-if="openedAchieves.length > 0"
             to="/"
           >Главная</RouterLink
           >
@@ -47,7 +46,9 @@ const { openedAchieves } = useAchievements();
 
 header {
   line-height: 1.5;
-  max-height: 100vh;
+  height: 440px;
+  position: sticky;
+  top: 100px;
 }
 
 .logo {

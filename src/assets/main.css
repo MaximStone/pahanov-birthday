@@ -25,3 +25,8 @@ a,
     place-items: center;
   }
 }
+
+main {
+  min-height: 512px;
+  padding-top: 50px;
+}
