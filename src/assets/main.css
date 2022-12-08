@@ -2,7 +2,6 @@
 
 #app {
   margin: 0 auto;
-  padding: 50px;
   font-weight: normal;
 }
 
@@ -19,10 +18,13 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1475px) {
   body {
     display: flex;
     place-items: center;
+  }
+  #app {
+    padding: 50px;
   }
 }
 

@@ -5,9 +5,9 @@
       <div v-for="(item, idx) in achievesDisplayArray" class="achieve-box">
         <template v-if="item.opened">
           <div class="download-box" @click="downloadThePictureHandler(item)">СКАЧАТЬ</div>
-          <img :src="item.small" style="width: 200px; height: 200px" />
+          <img :src="item.small" style="width: 100%; height: 100%" />
         </template>
-        <svg class="not-opened" v-else width="200" height="200">
+        <svg class="not-opened" v-else style="width: 100%; height: 100%">
           <image
             :xlink:href="item.small"
             width="100%"
@@ -43,14 +43,14 @@ const downloadThePictureHandler = (item: AchieveModel) => {
 <style>
 .achieves-container {
   display: grid;
-  grid-gap: 20px;
-  grid-template-columns: 200px 200px 200px;
-  grid-template-rows: auto auto auto;
+  grid-gap: 15px;
+  grid-template-columns: 150px 150px;
+  grid-auto-rows: 150px;
 }
 .achieve-box {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
   overflow: hidden;
   border: 3px solid #ffffff;
@@ -70,13 +70,22 @@ const downloadThePictureHandler = (item: AchieveModel) => {
   z-index: 999;
   display: none;
   cursor: pointer;
-  padding-top: 75px;
-  padding-left: 65px;
   font-weight: bold;
   color: #003f52;
 }
 
 .achieve-box:hover .download-box {
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (min-width: 1475px) {
+  .achieves-container {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 200px 200px 200px;
+    grid-auto-rows: 200px;
+  }
 }
 </style>

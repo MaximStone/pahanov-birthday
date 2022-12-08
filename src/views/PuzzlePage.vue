@@ -43,7 +43,7 @@
 </template>
 
 <style>
-@media (min-width: 1024px) {
+@media (min-width: 1475px) {
   .puzzle-container {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
     width: 512px;

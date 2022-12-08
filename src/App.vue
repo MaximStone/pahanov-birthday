@@ -39,16 +39,20 @@ const { openedAchieves } = useAchievements();
 
 <style scoped>
 .app-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  flex-wrap: wrap;
   padding: 0 2rem;
 }
 
 header {
+  text-align: center;
   line-height: 1.5;
-  height: 440px;
-  position: sticky;
-  top: 100px;
+  margin-bottom: 50px;
+  height: 100%;
+  width: 100%;
+  position: inherit;
 }
 
 .logo {
@@ -81,11 +85,22 @@ nav a:first-of-type {
   border: 0;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1475px) {
+  .app-container {
+    text-align: left;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+  }
+
   header {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
+    height: 440px;
+    width: 100%;
+    top: 210px;
+    position: sticky;
   }
 
   .logo {
