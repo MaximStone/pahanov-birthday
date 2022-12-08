@@ -16,6 +16,11 @@ const router = createRouter({
       component: () => import('../views/PuzzlePage.vue')
     },
     {
+      path: '/memories',
+      name: 'memories',
+      component: () => import('../views/MemoriesPage.vue')
+    },
+    {
       path: '/congrats',
       name: 'finish',
       component: () => import('../views/FinishPage.vue')

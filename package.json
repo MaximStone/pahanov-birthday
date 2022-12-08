@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@vueuse/core": "^9.6.0",
+    "easing": "^1.2.1",
     "lodash.debounce": "4.0.8",
     "tsparticles": "2.5.3",
     "tween.js": "16.6.0",
     "vue": "3.2.45",
+    "vue-game-card": "^0.3.1",
     "vue-router": "4.1.6",
     "vue3-particles": "2.5.3"
   },
@@ -33,6 +35,8 @@
     "prettier": "^2.7.1",
     "typescript": "~4.7.4",
     "vite": "^3.2.4",
-    "vue-tsc": "^1.0.9"
+    "vue-tsc": "^1.0.9",
+    "sass": "1.56.1",
+    "sass-loader": "13.2.0"
   }
 }

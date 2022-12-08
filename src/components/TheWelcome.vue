@@ -7,7 +7,7 @@ import router from "@/router";
 const { memoryAchieves, puzzleAchieves, memoryOpenedAchieves, puzzleOpenedAchieves, totalAchievements, openedAchieves } = useAchievements()
 
 const memoriesClickHandler = () => {
-
+  router.push({ name: 'memories' })
 }
 
 const puzzleClickHandler = () => {

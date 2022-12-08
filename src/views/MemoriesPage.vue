@@ -9,7 +9,7 @@
     />
 
     <div id="memoryContainer" class="memory-container">
-      MEMORY GAME CONTAINER
+      <MemoriesBoard :rows="4" :columns="5" :achieve="currentAchievement" />
     </div>
 
     <div v-show="showButtons">
@@ -54,6 +54,7 @@ import type { AchieveModel } from "@/logic/types";
 import { loadFull } from "tsparticles";
 import type { Container, Engine } from "tsparticles-engine";
 import { NConfigProvider, NButton, useOsTheme, darkTheme } from "naive-ui";
+import MemoriesBoard from "@/components/MemoriesBoard.vue";
 
 const { memoryOpenedAchieves, memoryAchieves, downloadTheBigPicture } = useAchievements();
 
@@ -120,4 +121,6 @@ const downloadThePictureHandler = () => {
 
 const osThemeRef = useOsTheme();
 const theme = computed(() => (osThemeRef.value === "dark" ? darkTheme : null));
+
+currentAchievement.value = firstNotOpenedAchievement.value;
 </script>
