@@ -1,35 +1,45 @@
 <template>
   <div class="scene">
-    <MCard
-      v-for="(item, index) in cardDataArray"
-      :key="`card_${item.cardId}`"
-      :height="CARD_HEIGHT"
-      :width="CARD_WIDTH"
-      :cardId="item.cardId"
-      :style="{
-        top: `${(CARD_HEIGHT + GAP) * ((index + 1) % 3) + 50}px`,
-        left: `${(CARD_WIDTH + GAP) * Math.ceil(index / 3)}px`,
-      }"
-      :front-image="item.model.small"
-      :back-image="frameSvg"
-      :open-close-animation-duration="500"
+    <TransitionGroup class="scene-grid" tag="div">
+      <MCard
+        v-for="(item, index) in cardDataArray"
+        :key="`card_${item.cardId}_${index}`"
+        :id="`card_${item.cardId}_${index}`"
+        :height="CARD_HEIGHT"
+        :width="CARD_WIDTH"
+        :cardId="item.cardId"
+        :reactiveState="item"
+        :front-image="item.model.small"
+        :back-image="frameSvg"
+        :open-close-animation-duration="500"
+        :enabled="enabledInteractivity"
+        @open="openCardHandler"
+        @close="closeCardHandler"
+      />
+    </TransitionGroup>
+
+    <img
+      v-if="!!achieve"
+      :src="achieve.small"
+      style="z-index: -1; position: absolute; top: 0; left: 0"
     />
   </div>
 </template>
 
 <script lang="ts">
 import type { PropType } from "vue";
-import { computed, defineComponent, onMounted } from "vue";
+import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import type { AchieveModel } from "@/logic/types";
 import MCard from "@/components/MCard.vue";
 import { achieveMap } from "@/logic/opened";
 import { getRandomNumbers, shuffleArray } from "@/logic/memories";
+import type { MemoryCard } from "@/logic/memories";
 
 import frameSvg from "@/assets/frame.svg";
 
 const CARD_WIDTH = 100;
 const CARD_HEIGHT = 100;
-const GAP = 10;
+const GAP = 4;
 let cardIds: number[] = [];
 
 export default defineComponent({
@@ -46,34 +56,113 @@ export default defineComponent({
     const allAchievements = Array.from(achieveMap.values());
     shuffleArray(allAchievements);
     const itemLength = (props.columns || 1) * (props.rows || 1);
-    const selectedAchievementArray = allAchievements.slice(0, Math.round(itemLength / 2));
-    let randomNums = getRandomNumbers(itemLength, 500)
+    const selectedAchievementArray = allAchievements.slice(
+      0,
+      Math.floor(itemLength / 2)
+    );
+    let randomNums = getRandomNumbers(itemLength, 500);
+    shuffleArray(randomNums);
+
+    const enabledInteractivity = ref<boolean>(true);
+    const firstOpenedCard = ref<MemoryCard | undefined>();
+    const secondOpenedCard = ref<MemoryCard | undefined>();
+
+    let timer = 0;
 
     const cardDataArray = computed(() => {
-      shuffleArray(randomNums);
-      const array = selectedAchievementArray.map((item: AchieveModel, index: number) => {
-        return {
-          cardId: randomNums[index],
-          model: item
+      const array1 = selectedAchievementArray.map(
+        (item: AchieveModel, index: number) => {
+          return reactive({
+            cardId: randomNums[index],
+            model: item,
+            hidden: false,
+            matched: false,
+            opened: false,
+          }) as MemoryCard;
         }
-      })
+      );
+      const array2 = selectedAchievementArray.map(
+        (item: AchieveModel, index: number) => {
+          return reactive({
+            cardId: randomNums[index],
+            model: item,
+            hidden: false,
+            matched: false,
+            opened: false,
+          }) as MemoryCard;
+        }
+      );
 
-      const targetArray = array.concat(array)
-      shuffleArray(targetArray)
+      const targetArray = array1.concat(array2);
+      shuffleArray(targetArray);
 
-      return targetArray
-    })
-
-    onMounted(() => {
-      randomNums = getRandomNumbers(itemLength, 500)
+      return targetArray as MemoryCard[];
     });
 
+    onMounted(() => {
+      randomNums = getRandomNumbers(itemLength, 500);
+      shuffleArray(randomNums);
+    });
+
+    const closeCardHandler = (cardId: number) => {
+      if (typeof firstOpenedCard.value !== "undefined") {
+        firstOpenedCard.value = undefined;
+      } else {
+        secondOpenedCard.value = undefined;
+        enabledInteractivity.value = true;
+      }
+    }
+
+    const openCardHandler = (cardId: number) => {
+      if (typeof firstOpenedCard.value === "undefined") {
+        firstOpenedCard.value = cardDataArray.value.find(
+          (item: MemoryCard) => item.cardId === cardId
+        );
+      } else {
+        secondOpenedCard.value = cardDataArray.value.find(
+          (item: MemoryCard) => item.cardId === cardId && item !== firstOpenedCard.value
+        );
+        enabledInteractivity.value = false;
+      }
+
+      if (timer) clearTimeout(timer);
+
+      timer = setTimeout(() => {
+        if (
+          firstOpenedCard.value &&
+          secondOpenedCard.value &&
+          firstOpenedCard.value.cardId === secondOpenedCard.value.cardId
+        ) {
+          firstOpenedCard.value.hidden = true;
+          secondOpenedCard.value.hidden = true;
+        }
+
+        if (
+          firstOpenedCard.value &&
+          secondOpenedCard.value &&
+          firstOpenedCard.value.cardId !== secondOpenedCard.value.cardId
+        ) {
+          firstOpenedCard.value.opened = false;
+          secondOpenedCard.value.opened = false;
+        }
+      }, 1000);
+    };
+
     return {
+      openCardHandler,
+      closeCardHandler,
+      enabledInteractivity,
       CARD_WIDTH,
       CARD_HEIGHT,
       GAP,
       cardDataArray,
-      frameSvg
+      frameSvg,
+      bindGridColsWidth: computed(
+        () => `repeat(${props.columns}, ${CARD_WIDTH}px)`
+      ),
+      bindGridRowsHeight: computed(
+        () => `repeat(${props.rows}, ${CARD_HEIGHT}px)`
+      ),
     };
   },
 });
@@ -81,15 +170,20 @@ export default defineComponent({
 
 <style scoped>
 .scene {
+  width: 512px;
+  height: 512px;
+}
+
+.scene-grid {
+  position: relative;
   perspective: 1000px;
-  position: absolute;
   transform-style: preserve-3d;
 
-  width: 50em;
-  height: 50em;
-  top: 50%;
-  left: 50%;
-  margin: -25em 0 0 -25em;
-  background-color: #809a80;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-gap: 3px;
+  grid-template-columns: v-bind(bindGridColsWidth);
+  grid-template-rows: v-bind(bindGridRowsHeight);
 }
 </style>

@@ -23,7 +23,7 @@
 
 <script lang="ts">
 import type { PropType, Ref } from 'vue'
-import { computed, defineComponent, ref } from 'vue'
+import { computed, defineComponent, reactive, ref, watch } from "vue";
 import { easeInOutCubic } from '@/logic/easing'
 import FrontFaceCard from "@/components/FrontFaceCard.vue";
 
@@ -32,7 +32,9 @@ export default defineComponent({
   components: { FrontFaceCard },
   props: {
     initiallyOpened: Boolean,
+    enabled: Boolean,
     frontImage: String,
+    reactiveState: Object,
     backImage: String,
     cardId: Number,
     sizeMetric: {
@@ -64,7 +66,7 @@ export default defineComponent({
       default: () => 300
     }
   },
-  emits: ['open'],
+  emits: ['open', 'close'],
   setup (props, { emit }) {
     const MAX_Z_AXIS = 2
     const D_TIME = 8
@@ -126,8 +128,11 @@ export default defineComponent({
       if (isOpened.value) return
 
       await turnCard()
-      emit('open', props.cardId)
       isOpened.value = true
+      if (props.reactiveState) {
+        props.reactiveState.opened = true
+      }
+      emit('open', props.cardId)
     }
 
     const closeCard = async () => {
@@ -135,12 +140,24 @@ export default defineComponent({
 
       await turnCard()
       isOpened.value = false
+      if (props.reactiveState) {
+        props.reactiveState.opened = false
+      }
+      emit('close', props.cardId)
     }
 
     const cardClickHandler = () => {
+      if (!props.enabled) return
       if (isOpened.value) closeCard()
       else openCard()
     }
+
+
+    watch(props.reactiveState as Record<string, any>,() => {
+      // console.log('props.reactiveState changed', props.reactiveState)
+      if (isOpened && !props.reactiveState?.opened) closeCard()
+      if (!isOpened && props.reactiveState?.opened) openCard()
+    })
 
     return {
       cardClickHandler,
@@ -166,7 +183,6 @@ export default defineComponent({
   background-color: rgba(0, 0, 0, 0.4);
   width: v-bind(calculatedWidth);
   height: v-bind(calculatedHeight);
-  margin: -5em 0 0 -3.5em;
   transform-origin: center;
   z-index: -1;
   border-radius: v-bind(calculatedBorderRadius);
@@ -176,8 +192,11 @@ export default defineComponent({
   filter: v-bind(shadeBlur);
 }
 
-.shape, .face, .face-wrapper, .shade-element, .shape-body, .card-container {
+.shape, .face, .face-wrapper, .shade-element, .shape-body {
   position: absolute;
+}
+
+.shape, .face, .face-wrapper, .shade-element, .shape-body, .card-container {
   transform-style: preserve-3d;
 }
 
@@ -233,7 +252,6 @@ export default defineComponent({
   opacity: 1;
   width: v-bind(calculatedWidth);
   height: v-bind(calculatedHeight);
-  margin: -5em 0 0 -3.5em;
 }
 
 .cub-1 .shape-body .face {
@@ -265,5 +283,9 @@ export default defineComponent({
 }
 .card-rotate-outside {
   transform: v-bind(rotationOutsize);
+}
+.card-container {
+  caret-color: transparent;
+  cursor: pointer;
 }
 </style>

@@ -1,10 +1,11 @@
+import type { AchieveModel } from "@/logic/types";
+
 export type MemoryCard = {
-  value: string;
+  cardId: number;
   opened: boolean;
   matched: boolean;
   hidden: boolean;
-  component: any;
-  data: any;
+  model: AchieveModel;
 };
 
 export type MemoryBoard = {

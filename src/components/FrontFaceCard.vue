@@ -1,42 +1,111 @@
 <template>
-  <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 200 200">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="100%"
+    height="100%"
+    viewBox="0 0 200 200"
+  >
     <mask :id="`cardmask_${maskNumbers.join('-')}`">
-      <circle v-if="maskNumbers.includes(1)" r="21" id="svg_2" cy="46" cx="43" fill="#fff" />
-      <circle v-if="maskNumbers.includes(2)" r="21" id="svg_3" cy="158" cx="156" fill="#fff" />
-      <circle v-if="maskNumbers.includes(3)" r="21" id="svg_4" cy="46" cx="158" fill="#fff" />
+      <circle
+        v-if="maskNumbers.includes(1)"
+        r="21"
+        id="svg_2"
+        cy="46"
+        cx="43"
+        stroke="#fff"
+        stroke-width="3"
+        fill="#fff"
+      />
+      <circle
+        v-if="maskNumbers.includes(2)"
+        r="21"
+        id="svg_3"
+        cy="158"
+        cx="156"
+        stroke="#fff"
+        stroke-width="3"
+        fill="#fff"
+      />
+      <circle
+        v-if="maskNumbers.includes(3)"
+        r="21"
+        id="svg_4"
+        cy="46"
+        cx="158"
+        stroke="#fff"
+        stroke-width="3"
+        fill="#fff"
+      />
       <circle
         v-if="maskNumbers.includes(4)"
         stroke="#fff"
+        stroke-width="3"
         r="24.5"
         id="svg_5"
         cy="101.5"
         cx="100.5"
         fill="#fff"
       />
-      <circle v-if="maskNumbers.includes(5)" r="21" id="svg_6" cy="158" cx="44" stroke="#fff" fill="#fff" />
+      <circle
+        v-if="maskNumbers.includes(5)"
+        r="21"
+        id="svg_6"
+        cy="158"
+        cx="44"
+        stroke="#fff"
+        stroke-width="3"
+        fill="#fff"
+      />
       <circle
         v-if="maskNumbers.includes(6)"
         stroke="#fff"
+        stroke-width="3"
         r="15.5"
         id="svg_7"
         cy="100.5"
         cx="55.5"
         fill="#fff"
       />
-      <circle v-if="maskNumbers.includes(7)" stroke="#fff" r="17" id="svg_8" cy="102" cx="146" fill="#fff" />
-      <circle v-if="maskNumbers.includes(8)" stroke="#fff" r="17" id="svg_9" cy="56" cx="100" fill="#fff" />
-      <circle v-if="maskNumbers.includes(9)" stroke="#fff" r="17" id="svg_10" cy="146" cx="100" fill="#fff" />
+      <circle
+        v-if="maskNumbers.includes(7)"
+        stroke="#fff"
+        stroke-width="3"
+        r="17"
+        id="svg_8"
+        cy="102"
+        cx="146"
+        fill="#fff"
+      />
+      <circle
+        v-if="maskNumbers.includes(8)"
+        stroke="#fff"
+        stroke-width="3"
+        r="17"
+        id="svg_9"
+        cy="56"
+        cx="100"
+        fill="#fff"
+      />
+      <circle
+        v-if="maskNumbers.includes(9)"
+        stroke="#fff"
+        stroke-width="3"
+        r="17"
+        id="svg_10"
+        cy="146"
+        cx="100"
+        fill="#fff"
+      />
     </mask>
 
-      <image
-        :xlink:href="imageSrc"
-        width="100%"
-        height="100%"
-        x="0"
-        y="0"
-        :mask="`url(#cardmask_${maskNumbers.join('-')})`"
-      ></image>
-
+    <image
+      :xlink:href="imageSrc"
+      width="100%"
+      height="100%"
+      x="0"
+      y="0"
+      :mask="`url(#cardmask_${maskNumbers.join('-')})`"
+    ></image>
   </svg>
 </template>
 <script lang="ts">
@@ -558,13 +627,13 @@ export default defineComponent({
   },
   setup(props) {
     const maskNumbers = computed(() => {
-      return combinations[props.maskType || 0]
-    })
+      return combinations[props.maskType || 0];
+    });
 
     return {
-      maskNumbers
-    }
-  }
+      maskNumbers,
+    };
+  },
 });
 </script>
 

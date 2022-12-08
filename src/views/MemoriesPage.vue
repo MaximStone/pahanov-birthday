@@ -1,5 +1,5 @@
 <template>
-  <div class="puzzle-container">
+  <div class="memories-game-container">
     <Particles
       v-if="showParticles"
       id="tsparticles"
@@ -9,7 +9,7 @@
     />
 
     <div id="memoryContainer" class="memory-container">
-      <MemoriesBoard :rows="4" :columns="5" :achieve="currentAchievement" />
+      <MemoriesBoard :rows="5" :columns="5" :achieve="currentAchievement" />
     </div>
 
     <div v-show="showButtons">
