@@ -6,8 +6,8 @@
         :key="`card_${item.cardId}_${index}`"
         :id="`card_${item.cardId}_${index}`"
         :style="{ opacity: item.hidden ? 0 : 1 }"
-        :height="CARD_HEIGHT"
-        :width="CARD_WIDTH"
+        :height="cardHeight"
+        :width="cardWidth"
         :cardId="item.cardId"
         :reactiveState="item"
         :front-image="item.model.small"
@@ -20,11 +20,25 @@
       />
     </div>
 
-    <img
+    <svg
       v-if="!!achieve"
-      :src="achieve.small"
-      style="z-index: -1; position: absolute; top: 0; left: 0"
-    />
+      style="
+        z-index: -1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      "
+    >
+      <image
+        :xlink:href="achieve.small"
+        width="100%"
+        height="100%"
+        x="0"
+        y="0"
+      ></image>
+    </svg>
   </div>
 </template>
 
@@ -39,10 +53,7 @@ import type { MemoryCard } from "@/logic/memories";
 
 import frameSvg from "@/assets/frame.svg";
 
-const CARD_WIDTH = 100;
-const CARD_HEIGHT = 100;
 const GAP = 4;
-let cardIds: number[] = [];
 
 export default defineComponent({
   name: "MemoriesBoard",
@@ -52,6 +63,8 @@ export default defineComponent({
   props: {
     columns: Number as PropType<number>,
     rows: Number as PropType<number>,
+    cardWidth: Number as PropType<number>,
+    cardHeight: Number as PropType<number>,
     achieve: Object as PropType<AchieveModel>,
   },
   emits: ["victory"],
@@ -184,16 +197,14 @@ export default defineComponent({
       closeCardHandler,
       firstOpenedCard,
       enabledInteractivity,
-      CARD_WIDTH,
-      CARD_HEIGHT,
       GAP,
       cardDataArray,
       frameSvg,
       bindGridColsWidth: computed(
-        () => `repeat(${props.columns}, ${CARD_WIDTH}px)`
+        () => `repeat(${props.columns}, ${props.cardWidth}px)`
       ),
       bindGridRowsHeight: computed(
-        () => `repeat(${props.rows}, ${CARD_HEIGHT}px)`
+        () => `repeat(${props.rows}, ${props.cardHeight}px)`
       ),
     };
   },
@@ -201,14 +212,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
-@media (min-width: 1475px) {
-  .scene {
-    width: 512px;
-    height: 512px;
-  }
-}
-
 .scene {
   width: 256px;
   height: 256px;
@@ -222,8 +225,19 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   display: grid;
-  grid-gap: 3px;
+  grid-gap: 2px;
   grid-template-columns: v-bind(bindGridColsWidth);
   grid-template-rows: v-bind(bindGridRowsHeight);
+}
+
+@media (min-width: 1475px) {
+  .scene {
+    width: 512px;
+    height: 512px;
+  }
+
+  .scene-grid {
+    grid-gap: 3px;
+  }
 }
 </style>

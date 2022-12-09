@@ -44,7 +44,7 @@ export default defineComponent({
     },
     cornerRadius: {
       type: Number,
-      default: () => 10
+      default: () => 5
     },
     width: {
       type: Number,

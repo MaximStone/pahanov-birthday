@@ -14,6 +14,8 @@
         :rows="5"
         :columns="5"
         :achieve="currentAchievement"
+        :card-width="isMobileScreen ? 50 : 100"
+        :card-height="isMobileScreen ? 50 : 100"
         @victory="victoryHandler"
       />
     </div>
@@ -31,7 +33,7 @@
         <NButton @click="downloadThePictureHandler"
           >Скачать в большом размере</NButton
         >
-        <NButton>К наградам</NButton>
+        <NButton @click="openAchievesDeskHandler">К наградам</NButton>
         <NButton v-if="showNextButton" @click="nextLevelClickHandler"
           >Следующий уровень</NButton
         >
@@ -81,7 +83,16 @@ import type { Container, Engine } from "tsparticles-engine";
 import { NConfigProvider, NButton, useOsTheme, darkTheme } from "naive-ui";
 import MemoriesBoard from "@/components/MemoriesBoard.vue";
 import * as particlesConfigJson from "../assets/config.json";
+import router from "@/router";
 
+
+import { useBreakpoints } from '@vueuse/core'
+
+const breakpoints = useBreakpoints({
+  desktop: 1475
+})
+
+const isMobileScreen = breakpoints.smaller('desktop')
 
 const { memoryOpenedAchieves, memoryAchieves, downloadTheBigPicture } =
   useAchievements();
@@ -102,9 +113,6 @@ const currentAchievement = ref<AchieveModel | undefined>();
 const showButtons = ref<boolean>(false);
 const showNextButton = ref<boolean>(false);
 const showParticles = ref<boolean>(false);
-
-const width = ref(512);
-const height = ref(512);
 
 const engineRef = ref<Engine | undefined>();
 const particlesContainerRef = ref<Container | undefined>();
@@ -138,6 +146,11 @@ const nextLevelClickHandler = () => {
 const downloadThePictureHandler = () => {
   downloadTheBigPicture(currentAchievement.value as AchieveModel);
 };
+
+const openAchievesDeskHandler = () => {
+  memoryOpenedAchieves.value.push(firstNotOpenedAchievement.value);
+  router.push({ name: 'finish' })
+}
 
 const osThemeRef = useOsTheme();
 const theme = computed(() => (osThemeRef.value === "dark" ? darkTheme : null));

@@ -35,7 +35,7 @@
         <NButton @click="downloadThePictureHandler"
           >Скачать в большом размере</NButton
         >
-        <NButton>К наградам</NButton>
+        <NButton @click="openAchievesDeskHandler">К наградам</NButton>
         <NButton v-if="showNextButton" @click="nextLevelClickHandler"
           >Следующий уровень</NButton
         >
@@ -68,6 +68,7 @@ import { loadFull } from "tsparticles";
 import type { Container, Engine } from "tsparticles-engine";
 import { NConfigProvider, NButton, useOsTheme, darkTheme } from "naive-ui";
 import * as particlesConfigJson from "../assets/config.json";
+import router from "@/router";
 
 const { puzzleOpenedAchieves, puzzleAchieves, downloadTheBigPicture } =
   useAchievements();
@@ -131,6 +132,11 @@ const nextLevelClickHandler = () => {
 const downloadThePictureHandler = () => {
   downloadTheBigPicture(currentAchievement.value as AchieveModel);
 };
+
+const openAchievesDeskHandler = () => {
+  puzzleOpenedAchieves.value.push(firstNotOpenedAchievement.value);
+  router.push({ name: 'finish' })
+}
 
 const osThemeRef = useOsTheme();
 const theme = computed(() => (osThemeRef.value === "dark" ? darkTheme : null));
