@@ -5,14 +5,14 @@
       id="tsparticles"
       :particlesInit="particlesInit"
       :particlesLoaded="particlesLoaded"
-      url="src/assets/config.json"
+      :options="particlesConfigJson"
     />
 
     <div id="memoryContainer" class="memory-container">
       <MemoriesBoard
         :key="`name_${currentAchievement?.name || '1'}`"
-        :rows="5"
-        :columns="5"
+        :rows="2"
+        :columns="2"
         :achieve="currentAchievement"
         @victory="victoryHandler"
       />
@@ -80,6 +80,8 @@ import { loadFull } from "tsparticles";
 import type { Container, Engine } from "tsparticles-engine";
 import { NConfigProvider, NButton, useOsTheme, darkTheme } from "naive-ui";
 import MemoriesBoard from "@/components/MemoriesBoard.vue";
+import * as particlesConfigJson from "../assets/config.json";
+
 
 const { memoryOpenedAchieves, memoryAchieves, downloadTheBigPicture } =
   useAchievements();

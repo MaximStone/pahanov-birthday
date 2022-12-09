@@ -5,7 +5,7 @@
       id="tsparticles"
       :particlesInit="particlesInit"
       :particlesLoaded="particlesLoaded"
-      url="src/assets/config.json"
+      :options="particlesConfigJson"
     />
     <PuzzleBoard
       :id="`board_${firstNotOpenedAchievement.name}`"
@@ -32,7 +32,9 @@
           margin-top: 10px;
         "
       >
-        <NButton @click="downloadThePictureHandler">Скачать в большом размере</NButton>
+        <NButton @click="downloadThePictureHandler"
+          >Скачать в большом размере</NButton
+        >
         <NButton>К наградам</NButton>
         <NButton v-if="showNextButton" @click="nextLevelClickHandler"
           >Следующий уровень</NButton
@@ -65,18 +67,17 @@ import type { AchieveModel } from "@/logic/types";
 import { loadFull } from "tsparticles";
 import type { Container, Engine } from "tsparticles-engine";
 import { NConfigProvider, NButton, useOsTheme, darkTheme } from "naive-ui";
+import * as particlesConfigJson from "../assets/config.json";
 
-const { puzzleOpenedAchieves, puzzleAchieves, downloadTheBigPicture } = useAchievements();
+const { puzzleOpenedAchieves, puzzleAchieves, downloadTheBigPicture } =
+  useAchievements();
 
 const notOpenedAchievements = computed(() => {
-  return puzzleAchieves.value.filter(
-    (item: AchieveModel) => {
-      return !puzzleOpenedAchieves.value
-        .map((item: AchieveModel) => item.name)
-        .includes(item.name)
-    }
-
-  );
+  return puzzleAchieves.value.filter((item: AchieveModel) => {
+    return !puzzleOpenedAchieves.value
+      .map((item: AchieveModel) => item.name)
+      .includes(item.name);
+  });
 });
 
 const firstNotOpenedAchievement = computed(
@@ -128,8 +129,8 @@ const nextLevelClickHandler = () => {
 };
 
 const downloadThePictureHandler = () => {
-  downloadTheBigPicture(currentAchievement.value as AchieveModel)
-}
+  downloadTheBigPicture(currentAchievement.value as AchieveModel);
+};
 
 const osThemeRef = useOsTheme();
 const theme = computed(() => (osThemeRef.value === "dark" ? darkTheme : null));
