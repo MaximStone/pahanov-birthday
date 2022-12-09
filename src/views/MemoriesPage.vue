@@ -11,8 +11,8 @@
     <div id="memoryContainer" class="memory-container">
       <MemoriesBoard
         :key="`name_${currentAchievement?.name || '1'}`"
-        :rows="2"
-        :columns="2"
+        :rows="5"
+        :columns="5"
         :achieve="currentAchievement"
         @victory="victoryHandler"
       />
