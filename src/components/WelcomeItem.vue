@@ -28,6 +28,13 @@ const { total, achieved } = toRefs(props);
   margin-top: 2rem;
   display: flex;
   cursor: pointer;
+  text-align: left;
+  transition: background-color 200ms;
+  padding: 10px;
+}
+
+.item:hover {
+  background-color: rgba(0, 167, 189, 0.3);
 }
 
 .details {
@@ -39,8 +46,12 @@ i {
   display: flex;
   place-items: center;
   place-content: center;
-  width: 32px;
-  height: 32px;
+  width: 50px;
+  height: 50px;
+
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  border-radius: 8px;
 
   color: var(--color-text);
 }
@@ -62,11 +73,6 @@ h3 {
     top: calc(50% - 25px);
     left: -26px;
     position: absolute;
-    border: 1px solid var(--color-border);
-    background: var(--color-background);
-    border-radius: 8px;
-    width: 50px;
-    height: 50px;
   }
 
   .item:before {
