@@ -5,6 +5,7 @@ export type MemoryCard = {
   opened: boolean;
   matched: boolean;
   hidden: boolean;
+  animated: boolean;
   model: AchieveModel;
 };
 

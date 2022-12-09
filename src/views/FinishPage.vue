@@ -57,7 +57,7 @@ const downloadThePictureHandler = (item: AchieveModel) => {
   box-shadow: 0 0 10px #2f2f2f;
 }
 .not-opened {
-  filter: blur(10px) grayscale(1);
+  filter: blur(7px) grayscale(1);
 }
 
 .download-box {

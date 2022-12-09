@@ -1,10 +1,11 @@
 <template>
   <div class="scene">
-    <TransitionGroup class="scene-grid" tag="div">
+    <div class="scene-grid">
       <MCard
         v-for="(item, index) in cardDataArray"
         :key="`card_${item.cardId}_${index}`"
         :id="`card_${item.cardId}_${index}`"
+        :style="{ opacity: item.hidden ? 0 : 1 }"
         :height="CARD_HEIGHT"
         :width="CARD_WIDTH"
         :cardId="item.cardId"
@@ -12,11 +13,12 @@
         :front-image="item.model.small"
         :back-image="frameSvg"
         :open-close-animation-duration="500"
-        :enabled="enabledInteractivity"
-        @open="openCardHandler"
+        :enabled="enabledInteractivity && item !== firstOpenedCard"
+        @open="openAfterCardHandler(item)"
+        @open:before="openBeforeCardHandler(item)"
         @close="closeCardHandler"
       />
-    </TransitionGroup>
+    </div>
 
     <img
       v-if="!!achieve"
@@ -52,7 +54,8 @@ export default defineComponent({
     rows: Number as PropType<number>,
     achieve: Object as PropType<AchieveModel>,
   },
-  setup(props) {
+  emits: ["victory"],
+  setup(props, { emit }) {
     const allAchievements = Array.from(achieveMap.values());
     shuffleArray(allAchievements);
     const itemLength = (props.columns || 1) * (props.rows || 1);
@@ -104,53 +107,82 @@ export default defineComponent({
       shuffleArray(randomNums);
     });
 
-    const closeCardHandler = (cardId: number) => {
-      if (typeof firstOpenedCard.value !== "undefined") {
+    const closeCardHandler = (item: MemoryCard) => {
+      if (firstOpenedCard.value === item) {
         firstOpenedCard.value = undefined;
-      } else {
-        secondOpenedCard.value = undefined;
-        enabledInteractivity.value = true;
       }
-    }
 
-    const openCardHandler = (cardId: number) => {
+      if (secondOpenedCard.value === item) {
+        secondOpenedCard.value = undefined;
+      }
+
+      enabledInteractivity.value = !(
+        firstOpenedCard.value && secondOpenedCard.value
+      );
+    };
+
+    const openBeforeCardHandler = (card: MemoryCard) => {
       if (typeof firstOpenedCard.value === "undefined") {
         firstOpenedCard.value = cardDataArray.value.find(
-          (item: MemoryCard) => item.cardId === cardId
+          (item: MemoryCard) => item === card
         );
       } else {
-        secondOpenedCard.value = cardDataArray.value.find(
-          (item: MemoryCard) => item.cardId === cardId && item !== firstOpenedCard.value
-        );
+        secondOpenedCard.value =
+          cardDataArray.value.find(
+            (item: MemoryCard) =>
+              item === card && item !== firstOpenedCard.value
+          ) || undefined;
+
         enabledInteractivity.value = false;
       }
 
+      if (
+        firstOpenedCard.value &&
+        secondOpenedCard.value &&
+        firstOpenedCard.value.cardId === secondOpenedCard.value.cardId
+      ) {
+        firstOpenedCard.value.matched = true;
+        secondOpenedCard.value.matched = true;
+      }
+    };
+
+    const openAfterCardHandler = (card: MemoryCard) => {
+      if (firstOpenedCard.value === card) return;
+
       if (timer) clearTimeout(timer);
 
+      if (!(firstOpenedCard.value && secondOpenedCard.value)) return;
+
       timer = setTimeout(() => {
-        if (
-          firstOpenedCard.value &&
-          secondOpenedCard.value &&
-          firstOpenedCard.value.cardId === secondOpenedCard.value.cardId
-        ) {
+        if (!(firstOpenedCard.value && secondOpenedCard.value)) return;
+
+        if (firstOpenedCard.value.cardId === secondOpenedCard.value.cardId) {
           firstOpenedCard.value.hidden = true;
           secondOpenedCard.value.hidden = true;
+          setTimeout(() => {
+            if (cardDataArray.value.every((card: MemoryCard) => card.matched)) {
+              emit("victory");
+            } else {
+              enabledInteractivity.value = true;
+            }
+
+            firstOpenedCard.value = undefined;
+            secondOpenedCard.value = undefined;
+          }, 500);
         }
 
-        if (
-          firstOpenedCard.value &&
-          secondOpenedCard.value &&
-          firstOpenedCard.value.cardId !== secondOpenedCard.value.cardId
-        ) {
+        if (firstOpenedCard.value.cardId !== secondOpenedCard.value.cardId) {
           firstOpenedCard.value.opened = false;
           secondOpenedCard.value.opened = false;
         }
-      }, 1000);
+      }, 500);
     };
 
     return {
-      openCardHandler,
+      openBeforeCardHandler,
+      openAfterCardHandler,
       closeCardHandler,
+      firstOpenedCard,
       enabledInteractivity,
       CARD_WIDTH,
       CARD_HEIGHT,
@@ -169,9 +201,17 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+@media (min-width: 1475px) {
+  .scene {
+    width: 512px;
+    height: 512px;
+  }
+}
+
 .scene {
-  width: 512px;
-  height: 512px;
+  width: 256px;
+  height: 256px;
 }
 
 .scene-grid {

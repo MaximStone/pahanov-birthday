@@ -43,3 +43,7 @@ main {
 .v-leave-to {
   opacity: 0;
 }
+
+#tsparticles {
+  z-index: 99;
+}

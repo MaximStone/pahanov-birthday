@@ -26,6 +26,7 @@ import type { PropType, Ref } from 'vue'
 import { computed, defineComponent, reactive, ref, watch } from "vue";
 import { easeInOutCubic } from '@/logic/easing'
 import FrontFaceCard from "@/components/FrontFaceCard.vue";
+import type { MemoryCard } from "@/logic/memories";
 
 export default defineComponent({
   name: 'MCard',
@@ -34,7 +35,7 @@ export default defineComponent({
     initiallyOpened: Boolean,
     enabled: Boolean,
     frontImage: String,
-    reactiveState: Object,
+    reactiveState: Object as PropType<MemoryCard>,
     backImage: String,
     cardId: Number,
     sizeMetric: {
@@ -66,7 +67,7 @@ export default defineComponent({
       default: () => 300
     }
   },
-  emits: ['open', 'close'],
+  emits: ['open', 'open:before', 'close'],
   setup (props, { emit }) {
     const MAX_Z_AXIS = 2
     const D_TIME = 8
@@ -127,23 +128,48 @@ export default defineComponent({
     const openCard = async () => {
       if (isOpened.value) return
 
+      emit('open:before', props.reactiveState)
+
+      if (props.reactiveState) {
+        props.reactiveState.animated = true
+      }
+
       await turnCard()
+
+      // animation is finished
+      if (props.reactiveState) {
+        props.reactiveState.animated = false
+      }
+
       isOpened.value = true
       if (props.reactiveState) {
         props.reactiveState.opened = true
       }
-      emit('open', props.cardId)
+
+      emit('open', props.reactiveState)
     }
 
     const closeCard = async () => {
       if (!isOpened.value) return
 
-      await turnCard()
+      // animation is starting
+      if (props.reactiveState) {
+        props.reactiveState.animated = true
+      }
+
+      await turnCard() // animation
+
+      // animation is finished
+      if (props.reactiveState) {
+        props.reactiveState.animated = true
+      }
+
       isOpened.value = false
       if (props.reactiveState) {
         props.reactiveState.opened = false
       }
-      emit('close', props.cardId)
+
+      emit('close', props.reactiveState)
     }
 
     const cardClickHandler = () => {
@@ -287,5 +313,6 @@ export default defineComponent({
 .card-container {
   caret-color: transparent;
   cursor: pointer;
+  transition: opacity 500ms;
 }
 </style>

@@ -9,7 +9,13 @@
     />
 
     <div id="memoryContainer" class="memory-container">
-      <MemoriesBoard :rows="5" :columns="5" :achieve="currentAchievement" />
+      <MemoriesBoard
+        :key="`name_${currentAchievement?.name || '1'}`"
+        :rows="5"
+        :columns="5"
+        :achieve="currentAchievement"
+        @victory="victoryHandler"
+      />
     </div>
 
     <div v-show="showButtons">
@@ -22,7 +28,9 @@
           margin-top: 10px;
         "
       >
-        <NButton @click="downloadThePictureHandler">Скачать в большом размере</NButton>
+        <NButton @click="downloadThePictureHandler"
+          >Скачать в большом размере</NButton
+        >
         <NButton>К наградам</NButton>
         <NButton v-if="showNextButton" @click="nextLevelClickHandler"
           >Следующий уровень</NButton
@@ -33,17 +41,34 @@
 </template>
 
 <style>
+
+.memory-container {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
+  width: 256px;
+  height: 256px;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+  background-color: #ddd;
+  min-width: 256px;
+  min-height: 256px;
+}
+.memories-game-container {
+  width: 256px;
+  height: 256px;
+}
+
 @media (min-width: 1475px) {
   .memory-container {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
     width: 512px;
     height: 512px;
-    margin: 0;
-    padding: 0;
     z-index: 1;
-    background-color: #ddd;
     min-width: 512px;
     min-height: 512px;
+  }
+  .memories-game-container {
+    width: 512px;
+    height: 512px;
   }
 }
 </style>
@@ -56,17 +81,15 @@ import type { Container, Engine } from "tsparticles-engine";
 import { NConfigProvider, NButton, useOsTheme, darkTheme } from "naive-ui";
 import MemoriesBoard from "@/components/MemoriesBoard.vue";
 
-const { memoryOpenedAchieves, memoryAchieves, downloadTheBigPicture } = useAchievements();
+const { memoryOpenedAchieves, memoryAchieves, downloadTheBigPicture } =
+  useAchievements();
 
 const notOpenedAchievements = computed(() => {
-  return memoryAchieves.value.filter(
-    (item: AchieveModel) => {
-      return !memoryOpenedAchieves.value
-        .map((item: AchieveModel) => item.name)
-        .includes(item.name)
-    }
-
-  );
+  return memoryAchieves.value.filter((item: AchieveModel) => {
+    return !memoryOpenedAchieves.value
+      .map((item: AchieveModel) => item.name)
+      .includes(item.name);
+  });
 });
 
 const firstNotOpenedAchievement = computed(
@@ -95,29 +118,24 @@ const particlesLoaded = async (container: Container) => {
   particlesContainerRef.value = container;
 };
 
-const onPuzzleBoardInit = () => {
-  currentAchievement.value = firstNotOpenedAchievement.value;
-};
-const onPuzzleBoardStart = () => {};
-const onPuzzleBoardChange = () => {};
-
-const onPuzzleBoardFinish = async () => {
+const victoryHandler = async () => {
   showNextButton.value =
     memoryOpenedAchieves.value.length !== memoryAchieves.value.length;
   showButtons.value = true;
   showParticles.value = true;
-  state.value.puzzle.push(firstNotOpenedAchievement.value.name);
+  state.value.memories.push(firstNotOpenedAchievement.value.name);
 };
 
 const nextLevelClickHandler = () => {
   showParticles.value = false;
   showButtons.value = false;
   memoryOpenedAchieves.value.push(firstNotOpenedAchievement.value);
+  currentAchievement.value = firstNotOpenedAchievement.value;
 };
 
 const downloadThePictureHandler = () => {
-  downloadTheBigPicture(currentAchievement.value as AchieveModel)
-}
+  downloadTheBigPicture(currentAchievement.value as AchieveModel);
+};
 
 const osThemeRef = useOsTheme();
 const theme = computed(() => (osThemeRef.value === "dark" ? darkTheme : null));
