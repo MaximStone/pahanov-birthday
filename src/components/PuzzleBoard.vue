@@ -105,7 +105,7 @@ export default {
       rafId: null,
       _tmpCtx: undefined,
       _tmpCanvas: undefined,
-      touchedCell: undefined
+      touchedCell: undefined,
     };
   },
   props: {
@@ -164,10 +164,10 @@ export default {
       };
     },
     sourceStyle() {
-      const styleObject = {}
+      const styleObject = {};
 
       if (!this.isGoal) {
-        styleObject.visibility = "hidden"
+        styleObject.visibility = "hidden";
       }
 
       return styleObject;
@@ -335,7 +335,7 @@ export default {
       this.board = createRandomBoard2D(this.cols, this.rows);
       this._blockPositions = [];
       this._isStarted = false;
-      this.isGoal = false
+      this.isGoal = false;
       this.$emit("init");
     },
     updateBlockPositions(isImmediate) {
@@ -423,7 +423,7 @@ export default {
       this.board.slide(idx);
       this.blocks = this.board.blocks.concat();
     },
-    mouseDownTouchStartHandler (event) {
+    mouseDownTouchStartHandler(event) {
       let x = event.offsetX - (this.isGoal ? this.width : 0);
       let y = event.offsetY;
       x = x / this.cellWidth;
@@ -437,7 +437,7 @@ export default {
         this.$refs.sourceImg.play();
       }
 
-      if (typeof this.touchedCell !== 'undefined') {
+      if (typeof this.touchedCell !== "undefined") {
         this.slide(this.touchedCell);
         return;
       }
@@ -450,7 +450,7 @@ export default {
     },
     onClick(event) {
       // NOTE: canvas is shifted to left when finished
-      if (typeof this.touchedCell !== 'undefined') {
+      if (typeof this.touchedCell !== "undefined") {
         this.slide(this.touchedCell);
         return;
       }
@@ -471,15 +471,9 @@ export default {
       this.$el.focus();
     },
     onResize() {
-      const w = this.$el.offsetWidth;
-      const h = this.$el.offsetHeight;
-      if (this.autoResize) {
-        this.internalWidth = w;
-        this.internalHeight = h;
-      } else {
-        this.internalWidth = this.width;
-        this.internalHeight = this.height;
-      }
+      this.internalWidth = this.width;
+      this.internalHeight = this.height;
+
       if (this.isImage) {
         this.$nextTick(this._loadImageToCanvas.bind(this));
       }
