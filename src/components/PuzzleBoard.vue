@@ -12,8 +12,6 @@
       style="visibility: hidden"
       @click.prevent
       @mousedown.prevent
-      @mouseup.prevent="onClick"
-      @touchend.prevent="onTouchEnd"
       :width="internalWidth * 2"
       :height="internalHeight"
     ></canvas>
@@ -22,7 +20,8 @@
       ref="puzzle-canvas"
       class="puzzle-canvas"
       @click.prevent
-      @mousedown.prevent
+      @mousedown.prevent="mouseDownTouchStartHandler"
+      @touchstart.prevent="mouseDownTouchStartHandler"
       @mouseup.prevent="onClick"
       @touchend.prevent="onTouchEnd"
       :style="canvasStyle"
@@ -105,7 +104,8 @@ export default {
       board: board,
       rafId: null,
       _tmpCtx: undefined,
-      _tmpCanvas: undefined
+      _tmpCanvas: undefined,
+      touchedCell: undefined
     };
   },
   props: {
@@ -423,10 +423,25 @@ export default {
       this.board.slide(idx);
       this.blocks = this.board.blocks.concat();
     },
+    mouseDownTouchStartHandler (event) {
+      let x = event.offsetX - (this.isGoal ? this.width : 0);
+      let y = event.offsetY;
+      x = x / this.cellWidth;
+      y = y / this.cellHeight;
+      const col = Math.floor(x);
+      const row = Math.floor(y);
+      this.touchedCell = row * this.cols + col;
+    },
     onTouchEnd(event) {
       if (this.isTouchNeeded) {
         this.$refs.sourceImg.play();
       }
+
+      if (typeof this.touchedCell !== 'undefined') {
+        this.slide(this.touchedCell);
+        return;
+      }
+
       const touch = event.changedTouches[0];
       const rect = this.$el.getBoundingClientRect();
       const x = touch.clientX - rect.left;
@@ -435,6 +450,11 @@ export default {
     },
     onClick(event) {
       // NOTE: canvas is shifted to left when finished
+      if (typeof this.touchedCell !== 'undefined') {
+        this.slide(this.touchedCell);
+        return;
+      }
+
       const x = event.offsetX - (this.isGoal ? this.width : 0);
       const y = event.offsetY;
       this.handleClick(x, y);
@@ -520,6 +540,7 @@ export default {
   overflow: hidden;
   width: 100%;
   height: 100%;
+  background-color: #0e698c;
 }
 .tile-number {
   position: absolute;
