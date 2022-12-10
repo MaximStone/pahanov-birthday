@@ -3,14 +3,15 @@
     <div class="scene-grid">
       <MCard
         v-for="(item, index) in cardDataArray"
-        :key="`card_${item.cardId}_${index}`"
-        :id="`card_${item.cardId}_${index}`"
+        :key="`card_${item.cardId|| 0}_${index}`"
+        :id="`card_${item.cardId || 0}_${index}`"
         :style="{ opacity: item.hidden ? 0 : 1 }"
         :height="cardHeight"
         :width="cardWidth"
-        :cardId="item.cardId"
+        :cardId="item.cardId || 0"
+        :unique="item.unique"
         :reactiveState="item"
-        :front-image="item.model.small"
+        :front-image="item.model?.small || uniquePng"
         :back-image="frameSvg"
         :open-close-animation-duration="500"
         :enabled="enabledInteractivity && item !== firstOpenedCard"
@@ -52,6 +53,9 @@ import { getRandomNumbers, shuffleArray } from "@/logic/memories";
 import type { MemoryCard } from "@/logic/memories";
 
 import frameSvg from "@/assets/frame.svg";
+import uniquePng from "@/assets/unique.png";
+
+import { MOBILE_MIN_WIDTH, MOBILE_MIN_WIDTH_PX } from "@/constants";
 
 const GAP = 4;
 
@@ -76,6 +80,7 @@ export default defineComponent({
       0,
       Math.floor(itemLength / 2)
     );
+
     let randomNums = getRandomNumbers(itemLength, 500);
     shuffleArray(randomNums);
 
@@ -110,6 +115,18 @@ export default defineComponent({
       );
 
       const targetArray = array1.concat(array2);
+
+      if (itemLength % 2 !== 0) {
+        targetArray.push(
+          reactive({
+            unique: true,
+            model: null,
+            matched: false,
+            opened: false,
+            hidden: false,
+          }) as MemoryCard
+        );
+      }
       shuffleArray(targetArray);
 
       return targetArray as MemoryCard[];
@@ -135,6 +152,11 @@ export default defineComponent({
     };
 
     const openBeforeCardHandler = (card: MemoryCard) => {
+      if (card.unique) {
+        card.matched = true;
+        return;
+      }
+
       if (typeof firstOpenedCard.value === "undefined") {
         firstOpenedCard.value = cardDataArray.value.find(
           (item: MemoryCard) => item === card
@@ -161,6 +183,13 @@ export default defineComponent({
 
     const openAfterCardHandler = (card: MemoryCard) => {
       if (firstOpenedCard.value === card) return;
+
+      if (card.unique && card.matched) {
+        setTimeout(() => {
+          card.hidden = true
+        }, 1000);
+        return
+      }
 
       if (timer) clearTimeout(timer);
 
@@ -192,6 +221,8 @@ export default defineComponent({
     };
 
     return {
+      MOBILE_MIN_WIDTH,
+      MOBILE_MIN_WIDTH_PX,
       openBeforeCardHandler,
       openAfterCardHandler,
       closeCardHandler,
@@ -200,6 +231,7 @@ export default defineComponent({
       GAP,
       cardDataArray,
       frameSvg,
+      uniquePng,
       bindGridColsWidth: computed(
         () => `repeat(${props.columns}, ${props.cardWidth}px)`
       ),
@@ -230,7 +262,7 @@ export default defineComponent({
   grid-template-rows: v-bind(bindGridRowsHeight);
 }
 
-@media (min-width: 1475px) {
+@media (min-width: 550px) {
   .scene {
     width: 512px;
     height: 512px;

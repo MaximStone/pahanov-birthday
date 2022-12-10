@@ -5,10 +5,10 @@
     height="100%"
     viewBox="0 0 200 200"
   >
-    <mask :id="`cardmask_${maskNumbers.join('-')}`">
+    <mask v-if="!unique" :id="`cardmask_${maskNumbers.join('-')}`">
       <circle
         v-if="maskNumbers.includes(1)"
-        r="24"
+        r="27"
         id="svg_2"
         cy="46"
         cx="43"
@@ -18,7 +18,7 @@
       />
       <circle
         v-if="maskNumbers.includes(2)"
-        r="24"
+        r="27"
         id="svg_3"
         cy="158"
         cx="156"
@@ -28,7 +28,7 @@
       />
       <circle
         v-if="maskNumbers.includes(3)"
-        r="25"
+        r="27"
         id="svg_4"
         cy="46"
         cx="158"
@@ -40,7 +40,7 @@
         v-if="maskNumbers.includes(4)"
         stroke="#fff"
         stroke-width="3"
-        r="27"
+        r="30"
         id="svg_5"
         cy="101.5"
         cx="100.5"
@@ -48,7 +48,7 @@
       />
       <circle
         v-if="maskNumbers.includes(5)"
-        r="23"
+        r="24"
         id="svg_6"
         cy="158"
         cx="44"
@@ -60,7 +60,7 @@
         v-if="maskNumbers.includes(6)"
         stroke="#fff"
         stroke-width="3"
-        r="18"
+        r="22"
         id="svg_7"
         cy="100.5"
         cx="55.5"
@@ -70,7 +70,7 @@
         v-if="maskNumbers.includes(7)"
         stroke="#fff"
         stroke-width="3"
-        r="20"
+        r="22"
         id="svg_8"
         cy="102"
         cx="146"
@@ -80,7 +80,7 @@
         v-if="maskNumbers.includes(8)"
         stroke="#fff"
         stroke-width="3"
-        r="20"
+        r="22"
         id="svg_9"
         cy="56"
         cx="100"
@@ -90,7 +90,7 @@
         v-if="maskNumbers.includes(9)"
         stroke="#fff"
         stroke-width="3"
-        r="20"
+        r="22"
         id="svg_10"
         cy="146"
         cx="100"
@@ -624,6 +624,7 @@ export default defineComponent({
   props: {
     imageSrc: String as PropType<string>,
     maskType: Number as PropType<number>,
+    unique: Boolean as PropType<boolean>,
   },
   setup(props) {
     const maskNumbers = computed(() => {
@@ -631,7 +632,7 @@ export default defineComponent({
     });
 
     return {
-      maskNumbers,
+      maskNumbers
     };
   },
 });

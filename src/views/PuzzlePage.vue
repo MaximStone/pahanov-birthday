@@ -12,7 +12,7 @@
       :autoResize="true"
       :showNumber="showNumber"
       :cols="3"
-      :rows="4"
+      :rows="3"
       :src="firstNotOpenedAchievement.small"
       :animation="animation"
       :width="width"

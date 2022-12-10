@@ -43,7 +43,6 @@
 </template>
 
 <style>
-
 .memory-container {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
   width: 256px;
@@ -58,9 +57,10 @@
 .memories-game-container {
   width: 256px;
   height: 256px;
+  margin-bottom: 100px;
 }
 
-@media (min-width: 1475px) {
+@media (min-width: 550px) {
   .memory-container {
     width: 512px;
     height: 512px;
@@ -87,12 +87,13 @@ import router from "@/router";
 
 
 import { useBreakpoints } from '@vueuse/core'
+import { MOBILE_MIN_WIDTH, MOBILE_MIN_WIDTH_PX } from "@/constants";
 
 const breakpoints = useBreakpoints({
-  desktop: 1475
+  mobile: MOBILE_MIN_WIDTH
 })
 
-const isMobileScreen = breakpoints.smaller('desktop')
+const isMobileScreen = breakpoints.smaller('mobile')
 
 const { memoryOpenedAchieves, memoryAchieves, downloadTheBigPicture } =
   useAchievements();
@@ -156,4 +157,6 @@ const osThemeRef = useOsTheme();
 const theme = computed(() => (osThemeRef.value === "dark" ? darkTheme : null));
 
 currentAchievement.value = firstNotOpenedAchievement.value;
+
+MOBILE_MIN_WIDTH_PX;
 </script>

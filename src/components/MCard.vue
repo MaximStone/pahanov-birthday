@@ -4,7 +4,7 @@
       <div class="shape-body card-rotate">
         <div class="face ft">
           <div class="photon-shader">
-            <FrontFaceCard :imageSrc="frontImage" :mask-type="cardId" />
+            <FrontFaceCard :imageSrc="frontImage" :mask-type="cardId" :unique="unique" />
           </div>
         </div>
         <div class="face bk">
@@ -20,6 +20,7 @@
           >
             <g>
               <path
+                class="back-path"
                 stroke="#114659"
                 fill="#08313F"
                 d="M42.4,357v-52.7h-2.9V357H42.4z M48.2,332.2v-1.6v-1.5v-18.6
@@ -52,6 +53,7 @@ export default defineComponent({
   props: {
     initiallyOpened: Boolean,
     enabled: Boolean,
+    unique: Boolean,
     frontImage: String,
     reactiveState: Object as PropType<MemoryCard>,
     backImage: String,
@@ -288,6 +290,12 @@ export default defineComponent({
   transform-origin: center;
 }
 
+.back-path {
+  stroke: #114659;
+  fill: #08313f;
+  transition: stroke 100ms, fill 100ms;
+}
+
 .face,
 .face-wrapper {
   overflow: hidden;
@@ -354,6 +362,15 @@ export default defineComponent({
   background-color: #114659;
   border-radius: v-bind(calculatedBorderRadius);
   width: v-bind(calculatedWidth);
+  transition: background-color 100ms;
+
+  &:hover {
+    background-color: #15546e;
+    .back-path {
+      stroke: #145267;
+      fill: #0c4457;
+    }
+  }
 }
 
 .card-rotate {

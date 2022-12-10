@@ -6,7 +6,9 @@ export type MemoryCard = {
   matched: boolean;
   hidden: boolean;
   animated: boolean;
-  model: AchieveModel;
+  model: AchieveModel | null;
+
+  unique: boolean;
 };
 
 export type MemoryBoard = {
