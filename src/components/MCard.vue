@@ -4,7 +4,11 @@
       <div class="shape-body card-rotate">
         <div class="face ft">
           <div class="photon-shader">
-            <FrontFaceCard :imageSrc="frontImage" :mask-type="cardId" :unique="unique" />
+            <FrontFaceCard
+              :imageSrc="frontImage"
+              :mask-type="cardId"
+              :unique="unique"
+            />
           </div>
         </div>
         <div class="face bk">
@@ -133,6 +137,7 @@ export default defineComponent({
           }
 
           if (rotateY.value >= initRotateY + 180) {
+            rotateY.value = initRotateY + 180
             clearInterval(firstMovementIntervalId);
 
             setTimeout(() => {
@@ -228,15 +233,21 @@ export default defineComponent({
       rotation: computed(
         () => `rotateX(${rotateX.value}deg) rotateY(${rotateY.value}deg)`
       ),
-      rotationOutsize: computed(() => `translateZ(${zAxis.value * 50}px)`),
-      rotationShade: computed(
-        () =>
-          `scaleX(${
-            Math.round(
-              Math.abs(Math.cos((rotateY.value * Math.PI) / 180) * 100)
-            ) / 100
-          })`
+      rotationOutsize: computed(() =>
+        zAxis.value > 0 ? `translateZ(${zAxis.value * 50}px)` : "none"
       ),
+      rotationShade: computed(() => {
+        const scaleValue =
+          Math.round(
+            Math.abs(Math.cos((rotateY.value * Math.PI) / 180) * 100)
+          ) / 100;
+
+        if (scaleValue > 1) {
+          `scaleX(${scaleValue})`;
+        }
+
+        return "none";
+      }),
       opacityShade: computed(
         () => `${Math.max(0, Math.min(1, (10 - zAxis.value) / 10))}`
       ),
@@ -363,12 +374,15 @@ export default defineComponent({
   border-radius: v-bind(calculatedBorderRadius);
   width: v-bind(calculatedWidth);
   transition: background-color 100ms;
-
+}
+.cub-1 {
   &:hover {
-    background-color: #15546e;
-    .back-path {
-      stroke: #145267;
-      fill: #0c4457;
+    .shape-body .bk {
+      background-color: #15546e;
+      .back-path {
+        stroke: #145267;
+        fill: #0c4457;
+      }
     }
   }
 }
