@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-
+import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -13,6 +13,15 @@ export default defineConfig({
   },
   base: '/pahanov-birthday/',
   build: {
-    outDir: './docs'
+    outDir: './docs',
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+        congrats: resolve(__dirname, 'congrats.html'),
+        puzzle: resolve(__dirname, 'puzzle.html'),
+        memories: resolve(__dirname, 'memories.html'),
+      },
+    },
   }
+
 })
