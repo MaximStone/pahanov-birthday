@@ -424,10 +424,13 @@ export default {
       this.blocks = this.board.blocks.concat();
     },
     mouseDownHandler(event) {
+      const rect = this.$el.getBoundingClientRect();
+      const ratio = rect.width / this.width;
+
       let x = event.offsetX - (this.isGoal ? this.width : 0);
       let y = event.offsetY;
-      x = x / this.cellWidth;
-      y = y / this.cellHeight;
+      x = x / (this.cellWidth * ratio);
+      y = y / (this.cellHeight * ratio);
       const col = Math.floor(x);
       const row = Math.floor(y);
       this.touchedCell = row * this.cols + col;
@@ -435,12 +438,16 @@ export default {
     touchStartHandler(event) {
       const touch = event.changedTouches[0];
       const rect = this.$el.getBoundingClientRect();
+
+      const ratio = rect.width / this.width
       let x = touch.clientX - rect.left;
       let y = touch.clientY - rect.top;
-      x = x / this.cellWidth;
-      y = y / this.cellHeight;
+      x = x / (this.cellWidth * ratio);
+      y = y / (this.cellHeight * ratio);
+
       const col = Math.floor(x);
       const row = Math.floor(y);
+
       this.touchedCell = row * this.cols + col;
     },
     onTouchEnd(event) {
