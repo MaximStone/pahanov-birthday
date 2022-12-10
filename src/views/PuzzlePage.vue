@@ -1,5 +1,5 @@
 <template>
-  <div class="puzzle-container">
+  <div class="puzzle-container square">
     <Particles
       v-if="showParticles"
       id="tsparticles"
@@ -45,17 +45,28 @@
 </template>
 
 <style>
+.square {
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  max-height: 100%;
+}
+
+.puzzle-container {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
+  padding: 0;
+  z-index: 1;
+  background-color: #ddd;
+  max-width: 512px;
+  margin: 0 0 100px;
+}
+
 @media (min-width: 1475px) {
   .puzzle-container {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.16), 0 2px 4px rgba(0, 0, 0, 0.23);
-    width: 512px;
-    height: 512px;
     margin: 0;
     padding: 0;
     z-index: 1;
     background-color: #ddd;
-    min-width: 512px;
-    min-height: 512px;
   }
 }
 </style>

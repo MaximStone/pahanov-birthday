@@ -26,8 +26,8 @@
       @mouseup.prevent="onClick"
       @touchend.prevent="onTouchEnd"
       :style="canvasStyle"
-      :width="1024"
-      :height="512"
+      :width="internalWidth * 2"
+      :height="internalHeight"
     ></canvas>
     <img v-if="isImage" :style="sourceStyle" :src="src" ref="sourceImg" />
     <video
@@ -39,8 +39,8 @@
       :muted="muted"
       :src="src"
       :style="sourceStyle"
-      :width="internalWidth"
-      :height="internalHeight"
+      width="512"
+      height="512"
     >
       <source
         v-for="source of sources"
@@ -180,9 +180,7 @@ export default {
   },
   mounted() {
     this.onResize();
-    window.addEventListener("resize", debounce(this.onResize.bind(this), 300));
-    // this._tmpCanvas = document.createElement("canvas");
-    // this._tmpCtx = this._tmpCanvas.getContext("2d");
+    // window.addEventListener("resize", debounce(this.onResize.bind(this), 300));
 
     this._tmpCanvas = this.$refs["puzzle-canvas1"];
     this._tmpCtx = this._tmpCanvas.getContext("2d");
@@ -194,7 +192,6 @@ export default {
         this._loadImageToCanvas();
         this.$refs.sourceImg.addEventListener("load", () => {
           this.isTouchNeeded = false;
-          console.log('image loaded');
           this._loadImageToCanvas();
         });
       });
@@ -202,7 +199,6 @@ export default {
       this.$nextTick(() => {
         this.$refs.sourceImg.addEventListener("load", () => {
           this.isTouchNeeded = false;
-          console.log('image loaded');
         });
       });
     }
@@ -289,12 +285,6 @@ export default {
     },
     board() {
       this.blocks = this.board.blocks;
-    },
-    width() {
-      this.onResize();
-    },
-    height() {
-      this.onResize();
     },
     blocks() {
       const isImmediate = !this.animation;
@@ -508,8 +498,8 @@ export default {
 <style scoped>
 #sourceImg,
 #targetImg {
-  width: 512px;
-  height: 512px;
+  width: 100%;
+  height: 100%;
 }
 .puzzle-canvas {
   position: absolute;
@@ -517,8 +507,8 @@ export default {
   padding: 0;
   top: 0;
   left: 0;
-  width: 1024px;
-  height: 512px;
+  width: 200%;
+  height: 100%;
 }
 .puzzle-message {
   position: absolute;
@@ -528,8 +518,8 @@ export default {
 .puzzle-board {
   position: relative;
   overflow: hidden;
-  width: 512px;
-  height: 512px;
+  width: 100%;
+  height: 100%;
 }
 .tile-number {
   position: absolute;
