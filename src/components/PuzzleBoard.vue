@@ -20,8 +20,8 @@
       ref="puzzle-canvas"
       class="puzzle-canvas"
       @click.prevent
-      @mousedown.prevent="mouseDownTouchStartHandler"
-      @touchstart.prevent="mouseDownTouchStartHandler"
+      @mousedown.prevent="mouseDownHandler"
+      @touchstart.prevent="touchStartHandler"
       @mouseup.prevent="onClick"
       @touchend.prevent="onTouchEnd"
       :style="canvasStyle"
@@ -423,9 +423,20 @@ export default {
       this.board.slide(idx);
       this.blocks = this.board.blocks.concat();
     },
-    mouseDownTouchStartHandler(event) {
+    mouseDownHandler(event) {
       let x = event.offsetX - (this.isGoal ? this.width : 0);
       let y = event.offsetY;
+      x = x / this.cellWidth;
+      y = y / this.cellHeight;
+      const col = Math.floor(x);
+      const row = Math.floor(y);
+      this.touchedCell = row * this.cols + col;
+    },
+    touchStartHandler(event) {
+      const touch = event.changedTouches[0];
+      const rect = this.$el.getBoundingClientRect();
+      let x = touch.clientX - rect.left;
+      let y = touch.clientY - rect.top;
       x = x / this.cellWidth;
       y = y / this.cellHeight;
       const col = Math.floor(x);
